@@ -14,11 +14,8 @@ use Livewire\Component;
 class Register extends Component
 {
     public string $name = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
 
     /**
@@ -26,15 +23,34 @@ class Register extends Component
      */
     public function register(): void
     {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $validated = $this->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'lowercase',
+                    'email',
+                    'max:255',
+                    'unique:' . User::class,
+                    'exists:siswas,email',
+                ],
+                'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            ],
+            [
+                'email.exists' => 'Email ini tidak terdaftar sebagai siswa.',
+                'email.unique' => 'Email ini sudah digunakan untuk registrasi.',
+            ]
+        );
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = User::create($validated))));
+        $user = User::create($validated);
+
+        //Assign role 'siswa'
+        $user->assignRole('siswa');
+
+        event(new Registered($user));
 
         Auth::login($user);
 

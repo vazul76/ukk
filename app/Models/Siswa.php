@@ -11,4 +11,9 @@ class Siswa extends Model
     public function pkls() {
         return $this->hasMany(Pkl::class);
     }
+
+    public function pklAktif()
+    {
+        return $this->hasOne(Pkl::class)->latestOfMany();
+    }
 }

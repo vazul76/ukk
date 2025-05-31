@@ -17,7 +17,8 @@ class PklResource extends Resource
 {
     protected static ?string $model = Pkl::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $navigationLabel = 'PKL';
 
     public static function form(Form $form): Form
     {
@@ -43,8 +44,8 @@ class PklResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('siswa_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('siswa.nama')
+                    ->label('Nama Siswa')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('industri_id')
                     ->numeric()

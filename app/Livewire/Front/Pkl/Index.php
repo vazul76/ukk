@@ -97,7 +97,7 @@ class Index extends Component
                 DB::rollBack();
                 $this->closeModal();
 
-                return redirect()->route('dashboard')->with('error', 'Transaksi dibatalkan: Siswa sudah melapor.');
+                return redirect()->route('daftarpkl')->with('error', 'Laporan dibatalkan: Siswa sudah melapor.');
             }
 
             // Simpan data PKL
@@ -117,7 +117,7 @@ class Index extends Component
             $this->closeModal();
             $this->resetInputFields();
 
-            return redirect()->route('dashboard')->with('success', 'Data PKL berhasil disimpan dan status siswa diperbarui!');
+            return redirect()->route('daftarpkl')->with('success', 'Data PKL berhasil disimpan dan status siswa diperbarui!');
 
             
         }
@@ -125,7 +125,7 @@ class Index extends Component
             DB::rollBack();
             // session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
             $this->closeModal();
-            return redirect()->route('dashboard')->with('error', 'Terjadi kesalahan:');
+            return redirect()->route('daftarpkl')->with('error', 'Terjadi kesalahan:');
         }
     }
 }
