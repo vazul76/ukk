@@ -39,7 +39,6 @@ class Register extends Component
             ],
             [
                 'email.exists' => 'Email ini tidak terdaftar sebagai siswa.',
-                'email.unique' => 'Email ini sudah digunakan untuk registrasi.',
             ]
         );
 
