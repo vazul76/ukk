@@ -2,7 +2,8 @@
     <div class="p-8 space-y-6">
         <h1 class="text-2xl font-bold">WELCOME</h1>
 
-        <div class="bg-white p-6 rounded-xl shadow flex items-center space-x-6">
+        <div class="bg-white p-6 rounded-xl shadow flex items-center space-x-6 dark:bg-zinc-900 dark:text-neutral-200">
+            {{-- Icon --}}
             {{-- Foto profil --}}
             <img src="{{ asset('storage/' . auth()->user()->foto) }}" class="w-25 h-25 rounded-full" alt="Foto Profil">
 
@@ -10,7 +11,7 @@
             {{-- Informasi siswa --}}
             <div>
                 <p class="text-xl font-bold">{{ auth()->user()->name }}</p>
-                <p class="text-gray-700">{{ auth()->user()->email }}</p>
+                <p class="text-gray-700 dark:text-slate-300">{{ auth()->user()->email }}</p>
 
                 @php
                     $siswa = auth()->user()->siswa;
@@ -23,7 +24,7 @@
                     @if($status === 1)
                         <span class="text-green-600">Sudah Lapor</span>
                     @else
-                        <span class="text-red-600">Belum Lapor</span>
+                        <span class="text-red-600">Belum Lapor </span>
                     @endif
                 </p>
 

@@ -26,6 +26,9 @@ class Login extends Component
     /**
      * Handle an incoming authentication request.
      */
+    /**
+ * Handle an incoming authentication request.
+ */
     public function login(): void
     {
         $this->validate();
@@ -43,7 +46,13 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // Tambahkan pengecekan role di sini
+        $user = Auth::user();
+        if (in_array($user->role, ['super_admin', 'guru'])) {
+            $this->redirect('/admin', navigate: true);
+        } else {
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        }
     }
 
     /**

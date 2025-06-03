@@ -8,11 +8,12 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
     use HasRoles;
 
     /**
@@ -65,5 +66,6 @@ class User extends Authenticatable
     {
         return $this->hasOne(Siswa::class, 'email', 'email');
     }
+
 
 }

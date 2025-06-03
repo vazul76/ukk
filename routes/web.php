@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified', 'check_user_email'])->group(function () {
     Route::get('/daftarguru', GuruIndex::class)->name('guru');
     Route::get('/daftarsiswa', SiswaIndex::class)->name('siswa');
     Route::get('/daftarindustri', IndustriIndex::class)->name('industri');
-    Route::get('/daftarpkl', PklIndex::class)->name('pkl');
+    Route::get('/daftarpkl', PklIndex::class)->name('daftarpkl');
 });
 
 Route::middleware(['auth'])->group(function () {

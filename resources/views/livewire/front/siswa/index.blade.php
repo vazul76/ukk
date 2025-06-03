@@ -3,7 +3,7 @@
             <div class="container mx-auto px-4 py-8">
                 <!-- Judul dan Pencarian -->
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">Daftar Siswa</h1>
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Daftar Siswa</h1>
                 </div>
                 <div class="mb-6 flex justify-end">
                     <input 
@@ -17,7 +17,7 @@
                 <!-- Tabel Siswa -->
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-50 dark:bg-zinc-900">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
@@ -28,23 +28,17 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lapor PKL</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white">
+                        <tbody class="bg-white dark:bg-zinc-900">
                             @forelse($siswaList as $item)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $item->nis ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $item->nama ?? '-' }}</div>
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $item->nama ?? '-' }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        @if($item->gender == 'L')
-                                            Laki-laki
-                                        @elseif($item->gender == 'P')
-                                            Perempuan
-                                        @else
-                                            -
-                                        @endif
+                                        {{ $siswa->gender_label }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $item->alamat ?? '-' }}

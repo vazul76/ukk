@@ -88,7 +88,7 @@ class SiswaSeeder extends Seeder
             ],
             [
                 'nama' => 'NAFISYA RHEA PRAYASTI', 
-                'nis' => '20410',
+                'nis' => '20420',
                 'gender' => 'P',
                 'alamat' => 'Bantul',
                 'kontak' => '08816752848',

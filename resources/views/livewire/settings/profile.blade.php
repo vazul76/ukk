@@ -1,7 +1,7 @@
 <section class="w-full">
     @include('partials.settings-heading')
     <x-settings.layout>
-        <div class="max-w-5xl mx-auto bg-white p-2 rounded-3xl shadow-md">
+        <div class="max-w-5xl mx-auto bg-white p-2 rounded-3xl shadow-md dark:bg-zinc-900 dark:text-white">
             <!-- Profile + Form -->
             <div class="flex flex-col md:flex-row md:space-x-6 items-start">
                 <div class="relative w-24 h-24 rounded-full overflow-hidden">

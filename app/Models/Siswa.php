@@ -16,4 +16,5 @@ class Siswa extends Model
     {
         return $this->hasOne(Pkl::class)->latestOfMany();
     }
+    
 }

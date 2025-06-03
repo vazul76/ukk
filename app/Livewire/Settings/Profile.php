@@ -30,13 +30,15 @@ class Profile extends Component
         $this->validate([
             'photo' => ['image', 'max:2048'],
         ]);
-        
+
         $this->tempPhotoUrl = $this->photo->temporaryUrl();
     }
 
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
+
+        $oldEmail = $user->getOriginal('email'); // simpan email lama dulu
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -54,14 +56,11 @@ class Profile extends Component
         $user->name = $validated['name'];
         $user->email = $validated['email'];
 
-        // Handle photo upload
         if ($this->photo) {
-            // Delete old photo if exists
-            if ($user->foto && Storage::exists('public/'.$user->foto)) {
-                Storage::delete('public/'.$user->foto);
+            if ($user->foto && Storage::exists('public/' . $user->foto)) {
+                Storage::delete('public/' . $user->foto);
             }
-            
-            // Store new photo
+
             $path = $this->photo->store('profile-photos', 'public');
             $user->foto = $path;
         }
@@ -70,12 +69,18 @@ class Profile extends Component
             $user->email_verified_at = null;
         }
 
+        // Update juga email siswa pakai email lama
+        if ($user->isDirty('email') && $user->hasRole('siswa')) {
+            \App\Models\Siswa::where('email', $oldEmail)->update([
+                'email' => $user->email,
+            ]);
+        }
+
         $user->save();
 
         $this->reset('photo');
         $this->dispatch('profile-updated', name: $user->name);
-        
-        // Refresh page to show updated photo
+
         $this->redirect(request()->header('Referer'));
     }
 

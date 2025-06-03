@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -12,31 +10,49 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::unprepared(
-            'DROP FUNCTION IF EXISTS format_gender'
-        );
-        DB::unprepared('
-            CREATE TRIGGER after_pkl_created
-            AFTER INSERT ON pkls
-            FOR EACH ROW
-            BEGIN
-                UPDATE siswas
-                SET status_pkl = "Aktif"
-                WHERE id = NEW.siswa_id;
-            END
-        ');
+        // Hapus function jika sudah ada
+        DB::unprepared('DROP FUNCTION IF EXISTS format_gender');
 
-        DB::unprepared('
-            CREATE FUNCTION format_gender(gender CHAR)
+        // Buat function konversi gender (tetap sama)
+        DB::unprepared("
+            CREATE FUNCTION format_gender(kode CHAR(1))
             RETURNS VARCHAR(20)
             DETERMINISTIC
             BEGIN
-                IF gender = "L" THEN
-                    RETURN "Laki-Laki";
+                IF kode = 'L' THEN
+                    RETURN 'Laki-laki';
+                ELSEIF kode = 'P' THEN
+                    RETURN 'Perempuan';
                 ELSE
-                    RETURN "Perempuan";
+                    RETURN 'Tidak diketahui';
                 END IF;
             END
+        ");
+
+        // Hapus trigger jika sudah ada
+        DB::unprepared('DROP TRIGGER IF EXISTS after_insert_pkls');
+
+        // Buat trigger baru dengan boolean
+        DB::unprepared('
+            CREATE TRIGGER after_pkl_insert
+            AFTER INSERT ON pkls
+            FOR EACH ROW
+            BEGIN
+                UPDATE siswas 
+                SET status_lapor_pkl = TRUE 
+                WHERE id = NEW.siswa_id;
+            END;
+        ');
+
+        DB::unprepared('
+            CREATE TRIGGER after_pkl_delete
+            AFTER DELETE ON pkls
+            FOR EACH ROW
+            BEGIN
+                UPDATE siswas 
+                SET status_lapor_pkl = FALSE 
+                WHERE id = OLD.siswa_id;
+            END;
         ');
     }
 
@@ -45,8 +61,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop trigger and function
-        DB::unprepared('DROP TRIGGER IF EXISTS after_pkl_created');
+        DB::unprepared('DROP TRIGGER IF EXISTS after_insert_pkls');
         DB::unprepared('DROP FUNCTION IF EXISTS format_gender');
     }
 };
