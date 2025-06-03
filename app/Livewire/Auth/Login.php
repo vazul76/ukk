@@ -49,11 +49,19 @@ class Login extends Component
         // Tambahkan pengecekan role di sini
         $user = Auth::user();
 
-        if ($user->hasAnyRole(['super_admin', 'guru'])) {
-            $this->redirect('/admin', navigate: true);
-        } else {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-        }
+            if ($user->hasRole('super_admin')) {
+                $this->redirect('/admin', navigate: true);
+            } elseif ($user->hasRole('guru')) {
+                $this->redirect('/admin', navigate: true);
+            } elseif ($user->hasRole('siswa')) {
+                $this->redirect(route('dashboard', absolute: false), navigate: true);
+            } else {
+                Auth::logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                $this->addError('email', 'Role tidak dikenali.');
+            }
+
 
     }
 
