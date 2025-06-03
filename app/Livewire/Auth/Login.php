@@ -48,11 +48,13 @@ class Login extends Component
 
         // Tambahkan pengecekan role di sini
         $user = Auth::user();
-        if (in_array($user->role, ['super_admin', 'guru'])) {
+
+        if ($user->hasAnyRole(['super_admin', 'guru'])) {
             $this->redirect('/admin', navigate: true);
         } else {
             $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
         }
+
     }
 
     /**
