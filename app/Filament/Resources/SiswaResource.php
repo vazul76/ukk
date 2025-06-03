@@ -37,7 +37,24 @@ class SiswaResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('kontak')
                     ->required()
-                    ->maxLength(16),
+                    ->maxLength(16)
+                    ->prefixIcon('heroicon-o-phone')
+                    ->prefix('+62')
+                    ->required()
+                    ->tel()
+                    ->dehydrateStateUsing(function ($state) {
+                        if (str_starts_with($state, '0')) {
+                            return '62' . substr($state, 1);
+                        }
+                        return $state;
+                    })
+                    ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set) {
+                        $kontak = $get('kontak');
+                        if (str_starts_with($kontak, '62')) {
+                            $set('kontak', '0' . substr($kontak, 2));
+                        }
+                    })
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
