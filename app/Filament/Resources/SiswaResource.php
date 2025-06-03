@@ -93,10 +93,20 @@ class SiswaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn ($record) => ! $record->status_lapor_pkl), // Hanya tampil jika status_lapor_pkl == false
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function ($records, $action) {
+                            if ($records->contains(fn ($record) => $record->status_lapor_pkl)) {
+                                $action->failure(
+                                    'Penghapusan dibatalkan. Salah satu siswa sudah melapor PKL dan tidak dapat dihapus.'
+                                );
+                                $action->cancel();
+                            }
+                        }),
                 ]),
             ]);
     }
