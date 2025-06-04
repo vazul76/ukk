@@ -47,10 +47,10 @@ class PklResource extends Resource
                 Tables\Columns\TextColumn::make('siswa.nama')
                     ->label('Nama Siswa')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('industri_id')
+                Tables\Columns\TextColumn::make('industri.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('guru_id')
+                Tables\Columns\TextColumn::make('guru.nama')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('mulai')
@@ -96,5 +96,9 @@ class PklResource extends Resource
             'create' => Pages\CreatePkl::route('/create'),
             'edit' => Pages\EditPkl::route('/{record}/edit'),
         ];
+    }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

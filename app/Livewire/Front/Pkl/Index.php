@@ -76,56 +76,56 @@ class Index extends Component
     }
 
     public function store()
-    {
-        $this->validate([
-                'siswaId'       => 'required',
-                'industriId'    => 'required',
-                'guruId'        => 'required',
-                'mulai'         => 'required|date',
-                'selesai'       => 'required|date|after:mulai',
-            ]);
-        
+{
+    $this->validate([
+        'siswaId'       => 'required',
+        'industriId'    => 'required',
+        'guruId'        => 'required',
+        'mulai'         => 'required|date',
+        'selesai'       => 'required|date|after:mulai',
+    ]);
 
-        DB::beginTransaction();
-        
-        try {
-            $siswa = Siswa::find($this->siswaId);
+    // Validasi durasi minimal 90 hari
+    $start = \Carbon\Carbon::parse($this->mulai);
+    $end = \Carbon\Carbon::parse($this->selesai);
+    $duration = $start->diffInDays($end);
 
-            if ($siswa->status_lapor_pkl) {
-                // session()->flash('error', 'Transaksi dibatalkan: Siswa sudah melapor.');
-
-                DB::rollBack();
-                $this->closeModal();
-
-                return redirect()->route('daftarpkl')->with('error', 'Laporan dibatalkan: Siswa sudah melapor.');
-            }
-
-            // Simpan data PKL
-            Pkl::create([
-                'siswa_id'      => $this->siswaId,
-                'industri_id'   => $this->industriId,
-                'guru_id'       => $this->guruId,
-                'mulai'         => $this->mulai,
-                'selesai'       => $this->selesai,
-            ]);
-
-            // Update status_lapor siswa
-            $siswa->update(['status_lapor_pkl' => 1]);
-
-            DB::commit();
-            
-            $this->closeModal();
-            $this->resetInputFields();
-
-            return redirect()->route('daftarpkl')->with('success', 'Data PKL berhasil disimpan dan status siswa diperbarui!');
-
-            
-        }
-        catch (\Exception $e) {
-            DB::rollBack();
-            // session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
-            $this->closeModal();
-            return redirect()->route('daftarpkl')->with('error', 'Terjadi kesalahan:');
-        }
+    if ($duration < 90) {
+        return redirect()->route('daftarpkl')->with('error', 'Durasi PKL minimal adalah 90 hari.');
     }
+
+    DB::beginTransaction();
+
+    try {
+        $siswa = Siswa::find($this->siswaId);
+
+        if ($siswa->status_lapor_pkl) {
+            DB::rollBack();
+            $this->closeModal();
+            return redirect()->route('daftarpkl')->with('error', 'Laporan dibatalkan: Siswa sudah melapor.');
+        }
+
+        Pkl::create([
+            'siswa_id'      => $this->siswaId,
+            'industri_id'   => $this->industriId,
+            'guru_id'       => $this->guruId,
+            'mulai'         => $this->mulai,
+            'selesai'       => $this->selesai,
+        ]);
+
+        $siswa->update(['status_lapor_pkl' => 1]);
+
+        DB::commit();
+        $this->closeModal();
+        $this->resetInputFields();
+
+        return redirect()->route('daftarpkl')->with('success', 'Data PKL berhasil disimpan dan status siswa diperbarui!');
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        $this->closeModal();
+        return redirect()->route('daftarpkl')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+}
+
 }
