@@ -58,7 +58,8 @@ class SiswaResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(30),
+                    ->maxLength(30)
+                    ->unique(ignoreRecord: true),
                 Forms\Components\Toggle::make('status_lapor_pkl')
                     ->required(),
             ]);

@@ -36,7 +36,7 @@ class SiswaSeeder extends Seeder
                 'nama' => 'ADE ZAIDAN ALTHAF', 
                 'nis' => '20390',
                 'gender' => 'L',
-                'alamat' => 'GUnungkidul',
+                'alamat' => 'Bantul',
                 'kontak' => '087786760589',
                 'email' => 'adezaidan24@gmail.com',
                 'status_lapor_pkl'=> false,

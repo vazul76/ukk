@@ -15,10 +15,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Route::get('/siswa', [SiswaController::class, 'index']);
-Route::resource('/siswa', SiswaController::class);
-Route::resource('/guru', GuruController::class);
-Route::resource('/industri', IndustriController::class);
+Route::apiresource('siswa', SiswaController::class);
+Route::apiresource('guru', GuruController::class);
+Route::apiResource('industri', IndustriController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('pkl', PklController::class);
 });
-

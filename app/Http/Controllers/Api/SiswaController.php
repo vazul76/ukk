@@ -13,14 +13,14 @@ class SiswaController extends Controller
         $search = $request->query('search', '');
 
         $siswaList = Siswa::query()
-            ->where('nama', 'like', '%'.$search.'%')
-            ->orWhere('nis', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search.'%')
+            ->where('nama', 'like', '%' . $search . '%')
+            ->orWhere('nis', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
             ->get();
 
         return response()->json($siswaList);
     }
-    
+
     public function show($id)
     {
         $siswa = Siswa::findOrFail($id);
@@ -33,7 +33,10 @@ class SiswaController extends Controller
             'nama' => 'required|string|max:255',
             'nis' => 'required|string|max:20|unique:siswas,nis',
             'email' => 'required|email|unique:siswas,email',
-            // Add other validation rules as needed
+            'gender' => 'required|in:L,P',
+            'alamat' => 'required|string',
+            'kontak' => 'required|string|max:16',
+            'status_lapor_pkl' => 'boolean',
         ]);
 
         $siswa = Siswa::create($data);
@@ -43,12 +46,15 @@ class SiswaController extends Controller
     public function update(Request $request, $id)
     {
         $siswa = Siswa::findOrFail($id);
-        
+
         $data = $request->validate([
             'nama' => 'sometimes|required|string|max:255',
-            'nis' => 'sometimes|required|string|max:20|unique:siswas,nis,'.$siswa->id,
-            'email' => 'sometimes|required|email|unique:siswas,email,'.$siswa->id,
-            // Add other validation rules as needed
+            'nis' => 'sometimes|required|string|max:20|unique:siswas,nis,' . $siswa->id,
+            'email' => 'sometimes|required|email|unique:siswas,email,' . $siswa->id,
+            'gender' => 'sometimes|required|in:L,P',
+            'alamat' => 'sometimes|required|string',
+            'kontak' => 'sometimes|required|string|max:16',
+            'status_lapor_pkl' => 'sometimes|boolean',
         ]);
 
         $siswa->update($data);
@@ -58,6 +64,8 @@ class SiswaController extends Controller
     public function destroy($id)
     {
         $siswa = Siswa::findOrFail($id);
-        return response()->json(null, 204);
+        $siswa->delete();
+
+        return response()->json(['message' => 'Siswa berhasil dihapus']);
     }
 }

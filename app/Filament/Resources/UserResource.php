@@ -36,7 +36,13 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->afterStateUpdated(function ($state, $livewire) {
+                        $user = $livewire->record;
+                        if ($user->siswa) {
+                            $user->siswa->update(['email' => $state]);
+                        }
+                    }),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
